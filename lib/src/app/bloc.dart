@@ -31,7 +31,7 @@ class Bloc extends Object with Validators {
       await storage.save('login-in-flutter-token', response.data['token']);
       await storage.save('login-in-flutter-refresh', response.data['token']);
     } catch (e) {
-      // TODO: how to return a failed message to Login Screen
+      // TODO: how to return a failed message to Login Screen SnackBar??
       throw Exception("Some error occurred on Login");
     }
   }
@@ -39,6 +39,7 @@ class Bloc extends Object with Validators {
   submit() async {
     final validEmail = _email.value;
     final validPassword = _password.value;
+    // TODO: how to Navigation.PushReplacement to Dashboard?
     login(validEmail, validPassword);
   }
 

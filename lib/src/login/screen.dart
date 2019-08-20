@@ -26,7 +26,7 @@ class Login extends StatelessWidget {
 
     return StreamBuilder(
       stream: bloc.email,
-      builder: (BuildContext context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         return TextField(
           autofocus: true,
           keyboardType: TextInputType.emailAddress,
@@ -45,7 +45,7 @@ class Login extends StatelessWidget {
 
     return StreamBuilder(
       stream: bloc.password,
-      builder: (context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         return TextField(
           obscureText: true,
           keyboardType: TextInputType.text,
@@ -63,7 +63,7 @@ class Login extends StatelessWidget {
   Widget submitButton(Bloc bloc) {
     return StreamBuilder(
       stream: bloc.submitValid,
-      builder: (context, snapshot) {
+      builder: (BuildContext context, snapshot) {
         return RaisedButton(
           child: Text('Entrar'),
           color: Colors.teal,
