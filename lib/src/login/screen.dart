@@ -1,55 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:login/src/app/provider.dart';
-import 'package:login/src/app/bloc.dart';
-import 'package:login/src/dashboard/screen.dart';
+import 'package:bloc_pattern/bloc_pattern.dart';
+
+import 'package:login/src/login/bloc.dart';
+
 
 class Login extends StatelessWidget {
+  double _height;
+  double _width;
+
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
+    // final LoginBloc bloc = BlocProvider.getBloc<LoginBloc>();
+    _height = MediaQuery.of(context).size.height;
+    _width = MediaQuery.of(context).size.width;
 
-    return StreamBuilder(
-      stream: bloc.status,
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.hasData) {
-          print(snapshot.data); 
-          switch (snapshot.data) {
-            case 'loading':
-              return CircularProgressIndicator();
+    return Material(
+      child: Container(
+        height: _height,
+        width: _width,
+        margin: EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(),
+              LoginForm(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-            case 'is_authenticated':
-            case 'success':
-              print("should use navigator Push Replacement");
-              Navigator.of(context).pushReplacement(
-                PageRouteBuilder(
-                  transitionDuration: Duration(seconds: 2),
-                  pageBuilder: (_, __, ___) => Dashboard()
-                )
-              );
-              break;
-
-            default:
-              return Container(
-                margin: EdgeInsets.all(20.0),
-                child: ListView(
-                  children: <Widget>[
-                    SizedBox(height: 40.0,),
-                    emailField(bloc),
-                    SizedBox(height: 10.0,),
-                    passwordField(bloc),
-                    SizedBox(height: 40.0,),
-                    submitButton(bloc),
-                  ],
-                ),
-              );
-          }
-        }
-        return CircularProgressIndicator();
-      }
+class LoginForm extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    LoginBloc bloc = BlocProvider.getBloc<LoginBloc>();
+    bloc.context = context;
+    return Material(
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 40.0,),
+          emailField(bloc),
+          passwordField(bloc),
+          SizedBox(height: 80.0,),
+          submitButton(bloc),
+        ],
+      ),
     );
   }
 
-  Widget emailField(Bloc bloc) {
+  Widget emailField(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.email,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -67,7 +68,7 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget passwordField(Bloc bloc) {
+  Widget passwordField(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.password,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -85,7 +86,7 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget submitButton(Bloc bloc) {
+  Widget submitButton(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.submitValid,
       builder: (BuildContext context, snapshot) {
