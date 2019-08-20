@@ -1,29 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:login/src/app/provider.dart';
 import 'package:login/src/app/bloc.dart';
+import 'package:login/src/dashboard/screen.dart';
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
-    
-    return Container(
-      margin: EdgeInsets.all(20.0),
-      child: ListView(
-        children: <Widget>[
-          SizedBox(height: 40.0,),
-          emailField(bloc),
-          SizedBox(height: 10.0,),
-          passwordField(bloc),
-          SizedBox(height: 40.0,),
-          submitButton(bloc),
-        ],
-      ),
+
+    return StreamBuilder(
+      stream: bloc.status,
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          print(snapshot.data); 
+          switch (snapshot.data) {
+            case 'loading':
+              return CircularProgressIndicator();
+
+            case 'is_authenticated':
+            case 'success':
+              print("should use navigator Push Replacement");
+              Navigator.of(context).pushReplacement(
+                PageRouteBuilder(
+                  transitionDuration: Duration(seconds: 2),
+                  pageBuilder: (_, __, ___) => Dashboard()
+                )
+              );
+              break;
+
+            default:
+              return Container(
+                margin: EdgeInsets.all(20.0),
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(height: 40.0,),
+                    emailField(bloc),
+                    SizedBox(height: 10.0,),
+                    passwordField(bloc),
+                    SizedBox(height: 40.0,),
+                    submitButton(bloc),
+                  ],
+                ),
+              );
+          }
+        }
+        return CircularProgressIndicator();
+      }
     );
   }
 
   Widget emailField(Bloc bloc) {
-
     return StreamBuilder(
       stream: bloc.email,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -42,7 +68,6 @@ class Login extends StatelessWidget {
   }
 
   Widget passwordField(Bloc bloc) {
-
     return StreamBuilder(
       stream: bloc.password,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
