@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:login/src/login/screen.dart';
+import 'package:login/src/dashboard/drawer.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -13,16 +14,19 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: _onClickLogout,
+          )
+        ],
       ),
       body: Container(child: Text("render the dashboard with drawer menu"),),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _logout,
-        child: Icon(Icons.exit_to_app),
-      ),
+      drawer: DrawerMenu(),
     );
   }
 
-  _logout() {
+  _onClickLogout() {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Login()));
   }
 }
