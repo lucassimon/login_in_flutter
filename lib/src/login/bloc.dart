@@ -8,6 +8,8 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 
 import 'package:login/storages/shared_storage.dart';
 import 'package:login/storages/storages.dart';
+import 'package:login/src/utils/alerts.dart';
+import 'package:login/src/utils/nav.dart';
 import 'package:login/src/login/validators.dart';
 import 'package:login/src/login/repositories.dart';
 
@@ -35,9 +37,12 @@ class LoginBloc extends BlocBase with Validators {
       Storage storage = Storage(sharedStorage);
       await storage.save('login-in-flutter-token', response.data['token']);
       await storage.save('login-in-flutter-refresh', response.data['token']);
+      // Goes to Dashboard
+      pushReplacement(_context, Dashboard());
     } catch (e) {
-      // TODO: how to return a failed message to Login Screen SnackBar??
-      throw Exception("Some error occurred on Login");
+      // Rreturn a failed message to Login Screen SnackBar??
+      alert(_context, "Autenticação");
+      throw Exception("some error occurred");
     }
   }
 
@@ -45,7 +50,6 @@ class LoginBloc extends BlocBase with Validators {
     final validEmail = _email.value;
     final validPassword = _password.value;
     await login(validEmail, validPassword);
-    Navigator.of(_context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Dashboard()));
   }
 
   @override

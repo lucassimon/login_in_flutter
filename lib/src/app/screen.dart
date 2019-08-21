@@ -23,7 +23,7 @@ class App extends StatelessWidget {
       blocs: [
         //add yours BLoCs controlles
         Bloc((i) => AppBloc()),
-        Bloc((i) => LoginBloc()),
+        Bloc((i) => LoginBloc(), singleton: false),
       ],
     );
   }
